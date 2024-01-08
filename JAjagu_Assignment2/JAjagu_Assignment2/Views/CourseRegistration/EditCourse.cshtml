@@ -1,0 +1,37 @@
+﻿@model EnrollmentViewModel
+
+@{
+    ViewData["Title"] = "Edit a course";
+}
+
+<form asp-controller="CourseRegistration" asp-action="EditCourse" method="post" enctype="application/x-www-form-urlencoded">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="ActiveCourse.CourseName">Name</label>
+        <input type="text" asp-for="ActiveCourse.CourseName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveCourse.CourseInstructor">Instructor</label>
+        <input type="text" asp-for="ActiveCourse.CourseInstructor" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveCourse.StartDate">Start date:</label>
+        <input type="datetime" asp-for="ActiveCourse.StartDate" value="@Model.ActiveCourse?.StartDate?.ToString("d")" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ActiveCourse.RoomNumber">Room number</label>
+        <input type="text" asp-for="ActiveCourse.RoomNumber" class="form-control" />
+    </div>
+
+    <input type="hidden" asp-for="ActiveCourse.CourseId" />
+
+    <br />
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-controller="CourseRegistration" asp-action="AllCourses" class="btn btn-primary">Cancel</a>
+</form>
+<img class="addCourse" src="/css/allCourse.jpg" />

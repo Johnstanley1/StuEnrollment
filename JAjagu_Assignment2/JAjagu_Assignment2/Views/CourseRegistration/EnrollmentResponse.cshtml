@@ -1,0 +1,44 @@
+﻿@model EnrollmentViewModel
+
+@{
+	ViewData["Title"] = "Confirmation response";	
+}
+
+@foreach (var student in Model?.AllStudents)
+{
+	<p>You have been invited to enroll in the @Model?.ActiveCourse?.CourseName course.</p>
+
+	<p>
+		Hey "@student.StudentName", you have been invited to enrol in the "@Model?.ActiveCourse?.CourseName" course
+		holding in room "@Model?.ActiveCourse?.RoomNumber", and starting on "@Model?.ActiveCourse?.StartDate?.ToString("d")" with "@Model?.ActiveCourse?.CourseInstructor".
+		<br>
+		We would be thrilled to have you join us but ask that you confirm your enrollment.
+	</p>
+}
+
+
+
+<form asp-controller="CourseRegistration" asp-action="EnrollmentResponse" method="post"
+	  enctype="application/x-www-form-urlencoded" asp-route-id="@Model.ActiveCourse?.CourseId">
+	@foreach (var student in Model.AllStudents)
+	{
+		<input type="hidden" name="studentId" asp-for="@student.StudentId" />
+	}
+	<div>
+		<label asp-for="@Model.ResponsesOption">Do you want to enroll?</label>
+		<span class="mx-2"></span>
+
+		<label asp-for="@Model.ResponsesOption">Yes</label>
+		<input type="radio" asp-for="@Model.ResponsesOption" id="yes" value="Yes" />
+		<span class="mx-2"></span>
+
+		<label asp-for="@Model.ResponsesOption">No</label>
+		<input type="radio" asp-for="@Model.ResponsesOption" id="no" value="No" />
+		<span class="mx-2"></span>
+
+		<button class="btn btn-primary" type="submit">Submit response</button>
+	</div>
+</form>
+
+<img src="/css/confirm-registration.jpg" alt="confirm-registration.jpg" />
+

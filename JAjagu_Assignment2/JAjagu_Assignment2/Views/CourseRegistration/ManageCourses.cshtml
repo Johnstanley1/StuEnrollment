@@ -1,0 +1,111 @@
+﻿@model EnrollmentViewModel
+
+@{
+	ViewData["Title"] = "Manage your course";
+}
+
+<div class="row">
+    <ul class="nav nav-tabs mb-10" id="myTab" role="tablist">
+        <li class="nav-item m-lg-2">
+            <a class="nav-link active" asp-controller="CourseRegistration" asp-action="AllCourses">All courses</a>
+        </li>
+        <li class="nav-item m-lg-2">
+            <a class="nav-link active" asp-controller="CourseRegistration" asp-action="EditCourse" asp-route-id="@Model?.ActiveCourse?.CourseId">Edit this course</a>
+        </li>
+        <li class="nav-item m-lg-2">
+            <a class="nav-link active" asp-controller="CourseRegistration" asp-action="AddCourse">Add New course</a>
+        </li>
+        <li class="nav-item m-lg-2">
+            <a class="nav-link active" asp-controller="CourseRegistration" asp-action="DeleteCourse" asp-route-id="@Model?.ActiveCourse?.CourseId">Delete this course</a>
+        </li>
+    </ul>
+</div>
+
+<br />
+
+<div>
+    <h6>Course summary:</h6>
+    <img class="manageCourse" src="/css/Manage.jpg" />
+
+    @if (Model.ActiveCourse != null)
+    {
+        <p>
+            The course "@Model.ActiveCourse.CourseName" is in room @Model.ActiveCourse.RoomNumber. 
+            It is starting on @Model.ActiveCourse.StartDate?.ToString("dd-MM-yyyy")
+            and the instructor is "@Model.ActiveCourse.CourseInstructor"
+        </p>
+    }
+
+    <p>
+        Invites not sent count: @Model?.InvitationNotSentCount &nbsp; Invite Sent count: @Model?.InvitationSentCount &nbsp;
+        Confirmed count: @Model?.ConfirmedCount &nbsp; Declined count: @Model?.DeclinedCount
+     </p>
+
+    <h6>Students:</h6>
+
+    @if (Model.AllStudents != null && Model.AllStudents.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Enrollment status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model?.AllStudents)
+                {
+                    <tr>
+                        <td>@student.StudentName</td>
+                        <td><a href="mailto:@student.StudentEmail">@student.StudentEmail</a></td>
+                        <td>@student.StatusString</td>
+                        <td>
+                            <form asp-controller="CourseRegistration" asp-action="DeleteStudent" method="post"
+                                enctype="application/x-www-form-urlencoded">
+                                <input type="hidden" name="StudentId" value="@student.StudentId" />
+                                <input type="hidden" name="CourseId" value="@Model?.ActiveCourse?.CourseId" />
+
+                                <button type="submit" class="btn btn-link" style="text-decoration:none">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No students yet - you should add some! &#128530</p>
+    }
+
+    <form asp-controller="CourseRegistration" asp-action="ManageCourses" method="post" enctype="application/x-www-form-urlencoded">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="NewStudent.StudentName">Name</label>
+            <input class="mx-2" type="text" asp-for="NewStudent.StudentName" />
+
+            <label asp-for="NewStudent.StudentEmail">Email</label>
+            <input class="mx-2" type="text" asp-for="NewStudent.StudentEmail" />
+
+            <button class="btn btn-primary">Create student</button>
+        </div>
+    </form>
+
+    <br />
+
+    <h6>Actions:</h6>
+
+
+    <form asp-controller="CourseRegistration" asp-action="SendEmails" asp-route-id="@Model.ActiveCourse.CourseId" method="post" enctype="application/x-www-form-urlencoded">
+        @foreach (var student in Model.AllStudents)
+        {
+            <input type="hidden" name="studentId" asp-for="@student.StudentId" />
+        }
+        <button class="btn btn-primary">Send confirmation messages</button>
+    </form>
+
+       
+</div>

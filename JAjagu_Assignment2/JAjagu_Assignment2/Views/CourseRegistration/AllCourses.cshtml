@@ -1,0 +1,46 @@
+﻿@model List<Course>
+
+@{
+	ViewData["Title"] = "All My Courses";
+}
+
+<p>
+	<a asp-controller="CourseRegistration" asp-action="AddCourse" style="text-decoration:none">Add a new course</a>
+	or return to <a asp-controller="Home" asp-action="Index" style="text-decoration:none">home page.</a>
+</p>
+
+<table class="table table-bordered table-striped table-hover">
+	<caption>List of Courses</caption>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Instructor</th>
+			<th>Start date</th>
+			<th>Room #</th>
+			<th># of students</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (Course courses in Model)
+		{
+			<tr>
+				<td>@courses.CourseName</td>
+				<td>@courses.CourseInstructor</td>
+				<td>@courses.StartDate?.ToString("MMM dd, yyyy")</td>
+				<td>@courses.RoomNumber</td>
+				<td>@courses.NumberOfStudent</td>
+				<td>
+					<a asp-controller="CourseRegistration" asp-action="ManageCourses"
+					   style="text-decoration:none" asp-route-id="@courses.CourseId">Manage</a>
+					<span class="mx-2">|</span>
+					<a asp-controller="CourseRegistration" asp-action="EditCourse" 
+						style="text-decoration:none" asp-route-id="@courses.CourseId">Edit</a>
+				</td>
+			</tr>
+		}
+		
+	</tbody>
+</table>
+<img class="allCourses" src="/css/allcourses.jpg" alt="allcourses image" />
